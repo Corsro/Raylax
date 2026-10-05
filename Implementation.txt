@@ -1,0 +1,2473 @@
+ANTEX — COMPLETE MASTER PROMPT / PROJECT HISTORY
+Every prompt given, every issue found, every change made, every standing rule.
+Compiled: 19 September 2026
+================================================================================
+
+--------------------------------------------------------------------------------
+SECTION 0 — WHAT ANTEX IS
+--------------------------------------------------------------------------------
+Antex is a vibe-coding agent product: a web app where a user types an idea and a
+real AI agent builds it — reading and writing real project files, generating real
+images, running real commands through a real execution provider, and reporting
+honestly when something is not available.
+
+Product name is always written exactly "Antex".
+
+Stack: TanStack Start v1 (React 19, Vite, Tailwind v4, shadcn/ui), backend on
+Lovable Cloud (Supabase: auth, Postgres with RLS, storage), server logic in
+createServerFn, Replit Cloud execution is used for remote/cloud execution.
+
+--------------------------------------------------------------------------------
+SECTION 1 — EVERY PROMPT I GAVE, IN ORDER
+--------------------------------------------------------------------------------
+
+PROMPT 1 — Initial build
+  "Read all 5 files, the UI should look futuristic, and have a wavy design. At
+   first glance it should already feel like a silky, soothing UI.
+   Also VERIFY that if a Lovable project is built to a standalone app, it still
+   HAS the backend features like AI integrations, auth etc.
+   For now, build the project, later I'll give my GitHub OAuth client key and id."
+
+PROMPT 2 — Scrap the wavy look, copy a reference screenshot
+  "Forget the 'wavy' design stuff you made, instead build a UI *like* this
+   screenshot, do not make it exactly the same. In the image it's cyan, we want
+   it in purple + pink with the Antex texts."
+  (Attached: dark page, cyan logo, centered headline, subheading, rounded button.)
+
+PROMPT 3 — The big correction prompt (GitHub keys + "it doesn't work" + new direction)
+  - Gave GitHub OAuth client id: [DO NOT PUT CLIENT ID VALUE IN THIS PROMPT; USE REPLIT/SECRET STORAGE]
+  - Gave GitHub OAuth client secret: [DO NOT PUT CLIENT SECRET VALUE IN THIS PROMPT; USE REPLIT/SECRET STORAGE]
+  - "I tested the app, IT DOESN'T WORK. Creating a project does create it, but the
+     workspace isn't there — instead it shows 'project is being connected to the
+     full workspace'."
+  - "Build the settings tab. Also I still don't like the UI — make it something
+     like Replit, or Lovable, or Cursor, or any other vibe coding agent out there."
+  - "Add a usernames section for the accounts. Settings and other things will be
+     accessed through the hamburger option."
+  - "It should open on the homepage. Projects go in the burger option. Popups
+     should only come when the first project is created, or the first message is
+     sent."
+  - "Look at yourself: what is the dashboard/homepage, how does it look, how does
+     it work? Look at your components, look at Replit and any other agent, even an
+     LLM. Antex should feel like a world famous agent everyone uses, not a mockup
+     app which looks like someone made it for the first time."
+  - "Add real models, build every missing page and everything else."
+  - "Clear the auth's data / the stored data — I want a new start with my account."
+  - "On the UI, follow your heart, make what you want, since I know you can make
+     the exact UI I want without listening to a word I said. It's been proven many
+     times — I've seen you build it on your own by me just saying 'build something'."
+  - Reference repo for CSS/design patterns:
+     https://github.com/fawaazsalehmalik-collab/cloud-page-publish
+  - "I realised purple ain't the fit, so let's use golden, with a dark gradient
+     with colors like black. This web page I gave you has the same colors and
+     design as the Antex we now will be building."
+  - "Make the logo with basically no regard or relation to its name, Antex. It
+     should feel like it's just not connected to its name at all, but still seem
+     to fit in exactly. Look at Replit's logo — a grid with 3/6 cells coloured
+     orange in an alternating sequence; it has nothing to do with the name
+     'Replit', but somehow still fits perfectly."
+
+PROMPT 4 — "Continue"
+  (Resume the unfinished rebuild after credits ran out.)
+
+PROMPT 5 — This document + the Gemini requirement
+  "Quickly create a txt file with EVERYTHING — everything that we had to fix,
+   every issue, EVERY SINGLE PROMPT I ever gave you, the changes we made in those
+   prompts. Make clear sections for everything, put the changes I requested (like
+   the Gold on black instead of the Purple).
+   Plus one more request: I will use my own Gemini key, so get rid of all the AI
+   gateway implementations, popups, the models, EVERYTHING."
+  (Clarified immediately after: this Gemini requirement belongs IN this master
+   prompt document, it was not to be implemented in the app yet.)
+
+--------------------------------------------------------------------------------
+SECTION 2 — DESIGN DIRECTION CHANGES (chronological)
+--------------------------------------------------------------------------------
+V1  Futuristic + wavy + "silky, soothing" — animated wave background, soft glass
+    panels.                                            [REQUESTED, then REJECTED]
+
+V2  Screenshot-like centered hero, cyan reference recoloured to PURPLE + PINK.
+    - background oklch(0.115 0.015 288), surface oklch(0.16 0.018 288)
+    - primary oklch(0.69 0.22 305) purple, accent oklch(0.7 0.22 348) pink
+    - wave background removed from every screen
+                                                        [BUILT, then REJECTED]
+
+V3  GOLD ON BLACK (current). Purple/pink dropped entirely.
+    - --background oklch(0.085 0.006 75)  (near-black, warm)
+    - --surface-raised oklch(0.168 0.01 80)
+    - --primary oklch(0.83 0.145 88)      (gold)
+    - --accent oklch(0.75 0.13 70)        (deeper gold)
+    - --radius 0.625rem
+    - gold aurora / silk / glass / text-gradient tokens
+    - visual language taken from the cloud-page-publish repo: high-end,
+      broadsheet-like, restrained, typographic
+    - product feel target: Replit / Cursor / Lovable — a real, world-class agent
+                                                        [CURRENT DIRECTION]
+
+LOGO CHANGES
+  V1/V2: wordmark with gradient glyph tied to the name.
+  V3 (current): abstract 3x3 grid mark, alternating filled gold cells, diagonal
+  highlight, 32x32 viewBox, wordmark "Antex" beside it. Deliberately unrelated to
+  the name — Replit-logo logic.
+
+UTILITY CLASSES (kept across versions)
+  app-atmosphere, brand-action, subtle-action, field-surface, auth-panel,
+  workspace-panel, feature-panel, glass, hairline, scroll-silk, rise-in,
+  shimmer-line, grain-veil.
+
+--------------------------------------------------------------------------------
+SECTION 3 — EVERY ISSUE FOUND AND WHAT FIXED IT
+--------------------------------------------------------------------------------
+1. BLOCKER: workspace did not exist.
+   /app/$projectId was a stub reading "Your project is ready… the full project
+   workspace is being connected", so creating a project appeared to do nothing.
+   FIX: real three-part workspace — file explorer from project_files, agent
+   conversation, and a right rail with activity + terminal, plus attachments with
+   real byte progress.
+
+2. Settings page was a stub that only rendered a capability badge.
+   FIX: Account (editable username), default model, Replit Cloud execution status,
+   execution provider status.
+
+3. No username anywhere.
+   FIX: profiles.display_name editable in settings, shown in header avatar and
+   greeting.
+
+4. Navigation was flat; no way to reach projects or settings.
+   FIX: hamburger slide-in panel — New project, recent projects, Settings, the
+   signed-in email, Sign out.
+
+5. App did not open on a usable home screen.
+   FIX: /app is the home: "What do you want to build?" composer, idea chips,
+   recent projects; the typed idea is stashed in sessionStorage as
+   antex:first-prompt:<projectId> and sent as the first agent message.
+
+6. Popups appeared at the wrong times.
+   FIX: first-use only — model choice before the very first message, GitHub
+   connect only when execution is first actually needed.
+
+7. Build errors from the first pass.
+   FIXED: activityPayload typed as Json; executor build/test overrides; a real
+   fallback error in github.server; uploads no longer wrote conversation_id;
+   removed unsafe non-null assertions in app.index; user_id added on insert.
+
+8. Fake capability risk (an agent claiming it ran commands).
+   FIX: capability_report tool, explicit "UNAVAILABLE" tool results, an honest
+   unavailableResult from the executor, and a hard system-prompt rule against
+   claiming untaken actions.
+
+9. GitHub OAuth credentials handling.
+   FIX: stored as encrypted secrets Replit Cloud executor credentials, referenced by name only, never in code or chat.
+
+10. Account data reset for a fresh start — REQUESTED, STILL PENDING.
+    Clear profile, projects, project_files, conversations, messages, uploads,
+    generated_images, replit_cloud_executor for
+    the authenticated user/account selected through the application; never hard-code an email or user UUID.
+
+11. End-to-end verification — STILL PENDING.
+    Create project -> first message -> file writes -> GitHub connect, on desktop
+    1280x1800 and mobile 390x844.
+
+12. Credits ran out twice mid-build, leaving work written but untested.
+
+--------------------------------------------------------------------------------
+SECTION 4 — BACKEND / DATA MODEL (as built)
+--------------------------------------------------------------------------------
+Tables (RLS own-rows on all):
+  profiles(id, email, display_name, avatar_url, default_model, onboarded)
+  projects(id, user_id, name, description, framework, language, package_manager,
+           build_command, test_command, run_command, last_opened_at)
+  project_files(project_id, path, kind, content, storage_path, mime_type,
+           size_bytes, is_binary, UNIQUE(project_id, path))   <- single source of
+           truth for the project filesystem
+  conversations(project_id, user_id, title, saved)
+  messages(conversation_id, user_id, role, content, model, tool_calls jsonb,
+           attachments jsonb)
+  uploads, generated_images
+  replit_cloud_executor(project_id, status, external_ref)
+  executor_runs(project_id, provider, platform, operation, command, status,
+           exit_code, stdout, stderr, external_ref)
+  activity_events(project_id, conversation_id, kind, label, status, detail)
+Storage: private bucket antex-files, 100MB cap
+  ${userId}/uploads/<uuid>-<name>, ${userId}/generated/<uuid>.png
+Auth: email + Google; handle_new_user trigger creates the profile row.
+
+Server surface:
+  ai.functions:       listModels, generateImage, sendAgentMessage (agent loop)
+  executor.functions: replitExecute, replitRunStatus, replitArtifact
+  executor.functions: replitExecute, replitRunStatus, replitArtifact
+  replit.cloud:       execute, runStatus, artifacts
+  platform:           WEB/DESKTOP/ANDROID detection, capability resolution
+  uploads:            XHR upload with real byte progress, 25MB cap
+
+Agent tools: list_files, read_file, write_file, create_directory, delete_path,
+move_path, search_files, generate_image, run_command, capability_report.
+Agent loop: UNDERSTAND -> PLAN -> IMPLEMENT -> RUN -> TEST -> DEBUG -> FIX ->
+VERIFY -> REPORT, max 8 tool steps per turn.
+
+STANDALONE-BUILD QUESTION (answered): a published Lovable project keeps its
+backend — auth, database with RLS, storage, server functions and AI calls all run
+against the same Lovable Cloud instance, so a standalone/published build retains
+every backend feature. Live verification of the published URL is still pending.
+
+--------------------------------------------------------------------------------
+SECTION 5 — NEW REQUIREMENT: MY OWN GEMINI KEYS, NO AI GATEWAY
+--------------------------------------------------------------------------------
+Remove every Lovable AI Gateway implementation: the gateway base URL, the
+LOVABLE_API_KEY usage, the live model catalog (listModels), the model picker
+component, the model-choice popup, the stored default_model preference, and all
+"choose a model" UI. No model selection is exposed to the user anywhere.
+
+I will provide 4 Gemini API keys. Here's what's important:
+
+  - When a model exhausts its requests/day, fall back to the next model, and so
+    on. Do this from the BEST model to the WORST model.
+  - After every model on one API key has its requests/day exhausted, fall back to
+    the next API key. Do this for all 4 keys.
+  - Only when all models on all 4 keys are exhausted, show a single clear message
+    saying the quota is exhausted.
+
+Implementation notes for this behaviour:
+  - Keys live as server-side secrets GEMINI_API_KEY_1..4, never in client code.
+  - Model chain, best -> worst, tried in order on each key.
+  - Treat HTTP 429 and RESOURCE_EXHAUSTED as "this model/key is out": advance to
+    the next model, then the next key; never retry the same pair in a loop.
+  - Any other error is a real error and must be surfaced honestly, not swallowed
+    as a quota fallback.
+  - No artificial timeouts around a generation call; stream where possible.
+  - The message stored per turn records which model and which key slot actually
+    served it, so failures are traceable.
+
+--------------------------------------------------------------------------------
+SECTION 6 — STANDING RULES (never break these)
+--------------------------------------------------------------------------------
+1.  Product name exactly "Antex".
+2.  Gold on near-black. No purple, no pink, no cyan.
+3.  Logo stays abstract, unrelated to the name, but fitting.
+4.  Home screen opens directly; no splash.
+5.  Projects live in the hamburger menu.
+6.  Popups only at genuine first-use moments.
+7.  Username/display name is editable and visible across the signed-in UI.
+8.  Never fake execution, file contents, command output or model availability.
+9.  Keep the Replit Cloud executor; Android warnings stay informational.
+10. Secrets by name only — never printed, never in code.
+11. Real functionality over mockups: the app should feel like a world-famous
+    agent, not a first attempt.
+12. Follow my intent, not just my words — build it properly on your own.
+
+--------------------------------------------------------------------------------
+SECTION 7 — OPEN TASKS
+--------------------------------------------------------------------------------
+[ ] Strip all AI Gateway code, model catalog, model picker and model popup.
+[ ] Implement the 4-key / multi-model Gemini fallback chain (Section 5).
+[ ] Clear my account data for a fresh start.
+[ ] End-to-end verification on desktop and mobile.
+[ ] Verify the published standalone build keeps auth, storage and AI calls.
+================================================================================
+
+================================================================================
+SECTION 8 — APPROVED ADDITIONS AFTER THE ORIGINAL MASTER DOCUMENT
+================================================================================
+
+This section incorporates the later Antex decisions that were approved after the
+original source document was created. These later decisions supersede earlier
+conflicts.
+
+--------------------------------------------------------------------------------
+8.1 CURRENT AI DIRECTION — GEMINI, NOT LOVABLE AI
+--------------------------------------------------------------------------------
+The Antex rebuild is being done again in Replit.
+
+The AI system must use Gemini rather than Lovable AI integrations.
+
+DO NOT use:
+- Lovable AI Gateway
+- Lovable-managed model access
+- Lovable AI model picker
+- Lovable gateway model catalog
+- Lovable gateway model fallback
+- Lovable gateway API as the inference provider
+
+The application should have an AI provider abstraction so the provider can be
+changed later, but the current production implementation is Gemini.
+
+The developer supplies the Gemini API credentials through secure configuration.
+
+Required secret slots:
+GEMINI_API_KEY_1
+GEMINI_API_KEY_2
+GEMINI_API_KEY_3
+GEMINI_API_KEY_4
+
+Never place actual key values in source code, prompts, frontend bundles, Git,
+logs, telemetry, error messages, or AI context.
+
+--------------------------------------------------------------------------------
+8.2 GEMINI MODEL + API-KEY FALLBACK SYSTEM
+--------------------------------------------------------------------------------
+The approved fallback system is a two-dimensional fallback chain.
+
+Dimension 1: models on the current API key.
+Dimension 2: API keys 1 through 4.
+
+The model ordering must be BEST → WORST according to the configured model policy.
+Do not invent a model ranking. The implementation must use only models that are
+actually available to the configured Gemini API environment.
+
+For API key 1:
+  best compatible model
+  ↓ if requests/day quota is exhausted
+  next compatible model
+  ↓
+  next compatible model
+  ↓
+  ...
+  ↓
+  if every compatible model on key 1 is exhausted
+  KEY 2
+
+Repeat the same process for keys 2, 3 and 4.
+
+If all compatible models on all four keys are exhausted, return one clear quota
+exhaustion state to the user.
+
+Never repeatedly retry a known exhausted model/key pair.
+
+Quota exhaustion signals such as HTTP 429 or a provider response equivalent to
+RESOURCE_EXHAUSTED should advance the fallback chain when the response actually
+indicates quota/rate exhaustion.
+
+Do not classify every error as quota exhaustion.
+
+Invalid API keys, invalid requests, unsupported models, malformed responses,
+network errors, provider outages and other errors need their own handling.
+
+The system must never silently turn an authentication failure into an endless
+fallback loop.
+
+The actual model/key slot that served each successful request should be recorded
+as safe metadata. Never record the secret value.
+
+--------------------------------------------------------------------------------
+8.3 GEMINI MODEL DISCOVERY
+--------------------------------------------------------------------------------
+If dynamic model discovery is used, discover models from the actual configured
+Gemini API rather than maintaining a fake hard-coded catalog.
+
+Filter the catalog to models that can actually perform the operation requested.
+For example, a coding/agent request may require text generation and tool/function
+calling capabilities.
+
+A model that cannot perform a required capability must not be selected merely
+because it is present in a catalog.
+
+Do not claim support for a model that the current credentials/environment cannot
+actually use.
+
+--------------------------------------------------------------------------------
+8.4 NO MODEL-CHOICE POPUP
+--------------------------------------------------------------------------------
+The previous first-message model-choice popup belonged to the old Lovable AI
+Gateway design.
+
+It is removed under the current Gemini architecture.
+
+Do not ask users to select a gateway model during onboarding.
+
+If a future Gemini model selector is intentionally added, it must be an explicit
+new feature and must not recreate the obsolete Lovable Gateway flow.
+
+--------------------------------------------------------------------------------
+8.5 GITHUB EXECUTION REMAINS APPROVED
+--------------------------------------------------------------------------------
+The Gemini change does NOT remove GitHub execution.
+
+Web execution remains:
+Antex web
+→ GitHub OAuth
+→ Antex backend
+→ GitHub API
+→ per-project private repository
+→ Replit Cloud
+→ fresh hosted runner
+→ real command/build/test execution
+→ stdout/stderr/exit code/artifacts
+→ Antex
+→ AI analysis/fix/rebuild/test/verify
+
+Replit Cloud is temporary compute, not a permanent shell.
+
+The repository is persistent project source/synchronization.
+
+Do not create a repository for every build. Keep one repository per Antex project
+where practical.
+
+Do not commit build caches, node_modules, .gradle directories, or other large
+transient directories unnecessarily. Use build artifacts for generated outputs.
+
+--------------------------------------------------------------------------------
+8.6 HYBRID EXECUTION — WEB + DESKTOP + ANDROID
+--------------------------------------------------------------------------------
+The approved architecture is hybrid.
+
+UNIFIED EXECUTOR
+├── GitHubActionsExecutor
+├── LocalDesktopExecutor
+└── LocalAndroidExecutor
+
+WEB:
+  Replit Cloud is the approved execution/build provider.
+
+DESKTOP:
+  Local CPU, local filesystem and local processes are preferred.
+
+ANDROID:
+  Local CPU/execution can be used when the device and runtime support the task.
+  Replit Cloud can be used as a fallback when connected and when local
+  execution is unsuitable.
+
+The rest of Antex must depend on the Executor interface, not a single provider.
+
+Conceptual interface:
+execute(command)
+readFile(path)
+writeFile(path, content)
+listFiles(path)
+createDirectory(path)
+deletePath(path)
+movePath(source, destination)
+startProcess(command)
+stopProcess(process)
+getProcessOutput(process)
+
+The implementation may use different transport/mechanisms on each platform.
+
+--------------------------------------------------------------------------------
+8.7 DESKTOP-FIRST HEAVY DEVELOPMENT
+--------------------------------------------------------------------------------
+Antex is designed primarily for desktop/laptop development when projects are
+large or demanding.
+
+The installed desktop app should use the local computer's CPU, RAM, storage,
+filesystem and process environment rather than requiring a remote cloud machine
+for every build.
+
+The web application can continue using Replit Cloud.
+
+--------------------------------------------------------------------------------
+8.8 ANDROID LOCAL RUNTIME
+--------------------------------------------------------------------------------
+The Android app may provide a controlled local development runtime with
+Termux-like capabilities/concepts without requiring users to separately install
+Termux.
+
+Do not assume root access.
+
+Respect Android sandbox and platform restrictions.
+
+The runtime must detect actual capabilities such as:
+- Android version
+- CPU architecture
+- available RAM
+- available storage
+- toolchain availability
+- process/runtime limits
+
+Do not promise arbitrary Linux capabilities if Android does not provide them.
+
+--------------------------------------------------------------------------------
+8.9 ANDROID BUILD WARNINGS
+--------------------------------------------------------------------------------
+When downloading/activating local Android build functionality, show an
+informational warning equivalent to:
+
+"Using a locally powered terminal to handle builds isn't recommended for mobile.
+
+Antex is designed primarily for desktop and laptop devices for heavy development
+workloads.
+
+Android devices may have limited CPU, RAM, storage, thermals, and available
+toolchains.
+
+Do you want to continue?"
+
+Buttons:
+Continue Download
+Cancel
+
+For a local Android build:
+
+"⚠️ Local Android Build
+
+This build will run directly on your Android device.
+
+Heavy builds may consume significant CPU, RAM, storage, and battery, and may
+cause your device to heat up or slow down.
+
+For large or demanding projects, Antex recommends using the desktop app or
+Replit Cloud.
+
+Continue with local build?"
+
+Buttons:
+Build Locally
+Use Replit Cloud
+Cancel
+
+Warnings should be based on actual device capabilities where possible.
+Do not shame users because their device is low-end.
+
+Classify builds using actual capability information, conceptually:
+SUPPORTED
+CAUTION
+UNSUITABLE
+UNSUPPORTED
+
+Do not hard-code arbitrary hardware requirements when capability detection can
+be used instead.
+
+--------------------------------------------------------------------------------
+8.10 ANTEX EXECUTION BACKEND / REPLIT BETA
+--------------------------------------------------------------------------------
+Earlier in development, Replit was used as a temporary cloud execution provider.
+
+If the current Replit project still contains the custom cloud-shell API, inspect
+and preserve useful existing implementation before changing it.
+
+Potential API surface:
+/api/health
+/api/status
+/api/execute
+/api/files
+/api/file
+/api/process
+
+The service, if used, must provide real:
+- command execution
+- stdout
+- stderr
+- exit codes
+- filesystem operations
+- process operations
+- package installation
+- build/test/run operations
+- project isolation
+
+Potential secret:
+ANTEX_SHELL_API_KEY
+
+Keep it in Replit Secrets or equivalent secure secret storage.
+Never expose it.
+
+The Replit executor is an implementation detail and must remain behind the
+unified Executor abstraction so it can be replaced later.
+
+Do not depend on an expiring/temporary development URL as permanent production
+infrastructure.
+
+--------------------------------------------------------------------------------
+8.11 GITHUB OAUTH SECURITY
+--------------------------------------------------------------------------------
+GitHub OAuth must be backend-driven.
+
+Flow:
+User clicks Connect GitHub
+→ GitHub authorization
+→ OAuth callback
+→ backend exchanges code
+→ backend stores token securely
+→ frontend receives connection status
+
+Client secret stays server-side.
+
+Do not place OAuth secrets in the frontend.
+Do not give OAuth tokens to the AI model.
+Do not log OAuth tokens.
+
+Secret names may be referenced in configuration, but secret values must never be
+hard-coded into source or prompts.
+
+--------------------------------------------------------------------------------
+8.12 GITHUB CONNECTION UX
+--------------------------------------------------------------------------------
+GitHub should be required only when execution/build functionality actually needs
+it on the web platform.
+
+Approved explanation:
+
+"We're sorry for the extra step.
+
+Terminal execution and project builds currently require a GitHub connection.
+
+This is a one-time setup. Once connected, your GitHub account will be available
+for future Antex projects, so you won't need to repeat this process."
+
+For users who do not want web GitHub execution, the installed Antex application
+can provide local execution where supported.
+
+Do not force GitHub connection on every user before it is needed.
+
+--------------------------------------------------------------------------------
+8.13 COMPLETE TOOLING SURFACE — APPROVED
+--------------------------------------------------------------------------------
+Antex is not just a chat box plus terminal.
+
+The approved product/tool surface includes:
+
+Core:
+- Project planner
+- Project/context/knowledge system
+- File manager
+- Code editor
+- Terminal
+- Package/dependency manager
+- Test runner
+- Debugger
+- Live app viewer
+- Database tool
+- Secrets/environment manager
+- Git tool
+- Document reader
+- Data/CSV analyzer
+- Design/UI tool
+- Video/audio tool
+- Deployment tool
+- Integration/API tool
+- Browser/web research
+- Browser automation
+- Screenshot tool
+- Image generator
+- Image viewer
+- File uploader
+
+Advanced tooling:
+- Project diagnostics
+- Code intelligence
+- Visual testing
+- Log/error intelligence
+- Process management
+- Port management
+- Artifact management
+- Background jobs
+- Diff/change review
+- Checkpoints/snapshots
+- Security auditor
+- Environment detection
+- Resource monitoring
+- Smart command planning
+- Multi-step agent operations
+- Tool orchestration
+- Capability discovery
+- Tool failure recovery
+- Tool permissions
+- Unified activity timeline
+
+Do not duplicate an existing implementation. Inspect the current repository first.
+
+--------------------------------------------------------------------------------
+8.14 FILE MANAGER + EDITOR + EXECUTOR SOURCE OF TRUTH
+--------------------------------------------------------------------------------
+The following must remain synchronized:
+
+REAL PROJECT FILESYSTEM
+↕
+FILE MANAGER
+↕
+CODE EDITOR
+↕
+AI AGENT
+↕
+EXECUTOR
+
+If the AI edits a file, the editor must eventually reflect the change.
+If the user edits a file, the agent must work from the current state.
+If a build generates an artifact, the project/artifact state must reflect it.
+
+Do not maintain multiple contradictory copies of the same project state.
+
+--------------------------------------------------------------------------------
+8.15 IMAGE GENERATION + FILES
+--------------------------------------------------------------------------------
+Antex supports real image generation and real image viewing.
+
+Generated images should be real project assets where appropriate.
+
+File uploads must be real uploads, not simulated progress.
+
+Previously approved upload constraints:
+- 25 MB per upload
+- 100 MB private storage cap in the original design
+
+Private storage bucket from the original architecture:
+antex-files
+
+Previously established paths:
+${userId}/uploads/<uuid>-<name>
+${userId}/generated/<uuid>.png
+
+Adapt these only if the new implementation uses a different storage architecture.
+The important requirement is real storage and correct user isolation.
+
+--------------------------------------------------------------------------------
+8.16 PROJECT CREATION / FIRST MESSAGE
+--------------------------------------------------------------------------------
+The homepage should let the user enter an initial project idea.
+
+Creating the project must open the real workspace immediately.
+
+The initial idea becomes the first agent message.
+
+The old implementation used:
+antex:first-prompt:<projectId>
+
+in sessionStorage as a bridge between project creation and first-message delivery.
+Preserve the behavior if the current architecture still benefits from it.
+
+Do not show a fake "workspace is being connected" placeholder instead of the
+workspace.
+
+--------------------------------------------------------------------------------
+8.17 WORKSPACE LAYOUT
+--------------------------------------------------------------------------------
+The approved workspace concept has three primary areas:
+
+1. File explorer / project files
+2. Agent conversation
+3. Right-side activity / terminal / execution area
+
+The exact responsive arrangement may change on smaller screens, but the functions
+must remain available.
+
+The workspace should expose actual:
+- Activity
+- Terminal/output
+- Build/test state
+- Files
+- Attachments
+- Artifacts
+- Agent messages
+
+--------------------------------------------------------------------------------
+8.18 HOME / NAVIGATION
+--------------------------------------------------------------------------------
+Antex should open on the homepage rather than an unnecessary splash screen.
+
+The hamburger menu is the main secondary navigation surface.
+
+It should provide access to:
+- New project
+- Recent projects
+- Projects
+- Settings
+- Signed-in account
+- Sign out
+
+Projects belong in the hamburger/project area rather than dominating the initial
+home screen.
+
+--------------------------------------------------------------------------------
+8.19 ACCOUNT / USERNAME
+--------------------------------------------------------------------------------
+Accounts should have an editable display name/username.
+
+Previously established field:
+profiles.display_name
+
+The name should appear in the signed-in UI where appropriate, including account
+areas/avatar/greeting.
+
+Authentication previously supported:
+- Email
+- Google
+
+Preserve authentication only if the current backend supports it correctly.
+
+--------------------------------------------------------------------------------
+8.20 PROJECT PERSISTENCE
+--------------------------------------------------------------------------------
+Users must be able to:
+- create
+- open
+- rename
+- continue
+- manage
+- delete where supported
+
+Projects must persist across restarts according to the selected backend/runtime.
+
+Do not make project state dependent on one browser tab's memory.
+
+--------------------------------------------------------------------------------
+8.21 REAL AGENT TOOLS
+--------------------------------------------------------------------------------
+The agent should have real tool calls corresponding to actual capabilities.
+
+Previously established tools:
+list_files
+read_file
+write_file
+create_directory
+delete_path
+move_path
+search_files
+generate_image
+run_command
+capability_report
+
+Expand as necessary with:
+create_file
+rename_path
+start_process
+stop_process
+get_process_output
+install_dependency
+build_project
+run_tests
+inspect_logs
+inspect_artifacts
+
+Only expose tools that the current runtime/provider can actually execute.
+
+--------------------------------------------------------------------------------
+8.22 CAPABILITY REPORTING
+--------------------------------------------------------------------------------
+Before using an execution-dependent capability, the agent/runtime should know
+whether it is available.
+
+Examples:
+terminal.execute
+filesystem.read
+filesystem.write
+process.spawn
+build
+test
+package.install
+git
+image.generate
+browser.automation
+
+If unavailable, return an explicit unavailable result.
+
+Do not invent a successful result merely because the tool name exists.
+
+--------------------------------------------------------------------------------
+8.23 AGENT LOOP
+--------------------------------------------------------------------------------
+The agent's core loop is:
+
+UNDERSTAND
+→ PLAN
+→ IMPLEMENT
+→ RUN
+→ TEST
+→ DEBUG
+→ FIX
+→ VERIFY
+→ REPORT
+
+The agent should use as many legitimate steps as the task requires within safe
+resource limits.
+
+Do not cripple the core vibe-coding workflow merely to save AI credits.
+
+Context optimization is encouraged, but correctness comes first.
+
+--------------------------------------------------------------------------------
+8.24 AGENT CONTEXT EFFICIENCY
+--------------------------------------------------------------------------------
+Use targeted project context.
+
+Avoid sending the entire project for every request.
+
+Use:
+- relevant files
+- current file
+- selected code
+- dependency metadata
+- build configuration
+- recent changes
+- recent terminal output
+- test failures
+- project summary
+
+Cache unchanged context where safe.
+Summarize old logs when appropriate.
+
+Never omit a relevant file/error merely because it saves tokens.
+
+--------------------------------------------------------------------------------
+8.25 TOOL ORCHESTRATION
+--------------------------------------------------------------------------------
+The AI is an orchestrator of real development operations.
+
+Typical workflow:
+
+User request
+→ inspect
+→ plan
+→ modify
+→ run
+→ observe
+→ debug
+→ modify
+→ run
+→ test
+→ verify
+→ report
+
+Tools should return structured results.
+
+Example result categories:
+SUCCESS
+FAILURE
+UNAVAILABLE
+EXHAUSTED
+CANCELLED
+IN_PROGRESS
+
+--------------------------------------------------------------------------------
+8.26 ACTIVITY TIMELINE
+--------------------------------------------------------------------------------
+The activity timeline should reflect real events.
+
+Useful states:
+Analyzing
+Reading
+Editing
+Running
+Building
+Testing
+Debugging
+Fixing
+Verifying
+Completed
+Failed
+Unavailable
+
+Never animate fake work for a command that has not actually started.
+
+--------------------------------------------------------------------------------
+8.27 TERMINAL HONESTY
+--------------------------------------------------------------------------------
+The terminal must show actual output.
+
+Never fabricate:
+- command output
+- exit codes
+- process IDs
+- build results
+- test results
+- package installation results
+- logs
+
+If a command is unavailable, report that.
+
+--------------------------------------------------------------------------------
+8.28 BUILD ARTIFACTS
+--------------------------------------------------------------------------------
+Artifacts must be real outputs.
+
+Track, where applicable:
+- filename
+- type
+- size
+- run/build ID
+- location
+- creation time
+- status
+
+Allow download/export where supported.
+
+For Android builds, the artifact may be an APK/AAB when the project produces it.
+
+--------------------------------------------------------------------------------
+8.29 ANDROID APK DEVELOPMENT
+--------------------------------------------------------------------------------
+The first Antex Android build should use a standard Android Gradle project.
+
+Conceptual pipeline:
+Antex source
+→ Android project
+→ Gradle build
+→ APK
+→ install
+→ launch
+→ test
+→ fix
+→ rebuild
+→ verify
+
+Do not confuse building Antex itself with the local execution runtime that Antex
+provides to users after installation.
+
+--------------------------------------------------------------------------------
+8.30 BACKEND / SUPABASE COMPATIBILITY
+--------------------------------------------------------------------------------
+The earlier Antex architecture used Lovable Cloud/Supabase for:
+- authentication
+- PostgreSQL
+- RLS
+- storage
+- server-side functions
+- project data
+- messages
+- execution records
+- activity
+
+If retained, the backend must remain a real backend.
+
+A publishable/public Supabase client key is not an AI provider credential.
+Do not mistake it for a Gemini/OpenAI/Anthropic API key.
+
+Secrets must be stored in backend secret storage.
+
+--------------------------------------------------------------------------------
+8.31 DATA MODEL — APPROVED CONCEPTS
+--------------------------------------------------------------------------------
+Preserve these concepts where they fit the current implementation:
+
+profiles
+projects
+project_files
+conversations
+messages
+uploads
+generated_images
+replit_cloud_executor
+replit_cloud_credentials
+executor_runs
+activity_events
+
+Important fields from the earlier implementation include:
+
+projects:
+- user_id
+- name
+- description
+- framework
+- language
+- package_manager
+- build_command
+- test_command
+- run_command
+- last_opened_at
+
+project_files:
+- project_id
+- path
+- kind
+- content
+- storage_path
+- mime_type
+- size_bytes
+- is_binary
+- unique(project_id, path)
+
+messages:
+- conversation_id
+- user_id
+- role
+- content
+- model
+- tool_calls
+- attachments
+
+executor_runs:
+- project_id
+- provider
+- platform
+- operation
+- command
+- status
+- exit_code
+- stdout
+- stderr
+- external_ref
+
+activity_events:
+- project_id
+- conversation_id
+- kind
+- label
+- status
+- detail
+
+Do not blindly recreate schemas if the current backend already implements the
+same concepts correctly.
+
+--------------------------------------------------------------------------------
+8.32 STORAGE / RLS
+--------------------------------------------------------------------------------
+User-owned project data must remain isolated through proper authorization and RLS
+where applicable.
+
+Never allow one user to access another user's:
+- projects
+- files
+- conversations
+- uploads
+- generated images
+- GitHub connection
+- execution records
+
+--------------------------------------------------------------------------------
+8.33 SECURITY AUDIT
+--------------------------------------------------------------------------------
+The security auditor should detect relevant problems such as:
+- secrets in source
+- exposed provider keys
+- credentials in Git history
+- unsafe environment handling
+- excessive permissions
+- dangerous configuration
+
+Do not reveal the secret itself in the process of reporting that it exists.
+
+--------------------------------------------------------------------------------
+8.34 PORTS / PROCESSES / BACKGROUND JOBS
+--------------------------------------------------------------------------------
+Where supported, Antex should manage:
+- processes
+- background jobs
+- ports
+- service status
+- output
+- cancellation
+
+Port management may identify which process occupies a port and help resolve
+conflicts.
+
+Never claim a process is running without actual process state.
+
+--------------------------------------------------------------------------------
+8.35 CODE / CHANGE REVIEW
+--------------------------------------------------------------------------------
+For AI edits, provide meaningful change visibility where practical:
+- files changed
+- created files
+- deleted files
+- diff
+- summary
+- checkpoint
+- rollback/revert
+
+Avoid destroying unrelated work.
+
+--------------------------------------------------------------------------------
+8.36 WEB RESEARCH
+--------------------------------------------------------------------------------
+When web research is configured, research results must be real.
+
+The agent should be able to distinguish:
+- project-local knowledge
+- tool output
+- web research
+- model inference
+
+Never fabricate a website, source, API result, documentation result, or citation.
+
+--------------------------------------------------------------------------------
+8.37 DEPLOYMENT / INTEGRATIONS
+--------------------------------------------------------------------------------
+Deployment and integration tools must operate on real configured providers.
+
+Credentials stay secure.
+
+A deployment is successful only after actual provider/build/deployment state
+confirms success.
+
+--------------------------------------------------------------------------------
+8.38 DOCUMENTS / DATA / MEDIA
+--------------------------------------------------------------------------------
+Document reader:
+read actual supported documents.
+
+CSV/data analyzer:
+read actual data and provide actual analysis.
+
+Design/UI tool:
+make real project changes when applied.
+
+Video/audio tool:
+process actual supported files and report actual status.
+
+Screenshot tool:
+produce screenshots from actual supported contexts.
+
+Browser automation:
+perform actual supported automation and return real results.
+
+--------------------------------------------------------------------------------
+8.39 PERFORMANCE
+--------------------------------------------------------------------------------
+Use practical performance controls:
+- lazy loading
+- pagination
+- incremental updates
+- context caching
+- log truncation/summarization
+- efficient file tree rendering
+
+Do not sacrifice correctness to reduce model calls.
+
+--------------------------------------------------------------------------------
+8.40 REBUILD-FIRST ENGINEERING RULE
+--------------------------------------------------------------------------------
+Because Antex is being rebuilt again in Replit:
+
+FIRST:
+inspect the current repository.
+
+THEN:
+classify:
+- working
+- partially working
+- broken
+- obsolete
+- missing
+
+THEN:
+fix/reuse rather than blindly rebuilding.
+
+Do not burn credits rebuilding features that already work.
+
+But do not preserve obsolete Lovable AI Gateway code merely because it exists.
+
+The Gemini migration is intentional.
+
+--------------------------------------------------------------------------------
+8.41 OLD BUG REGRESSION CHECKLIST
+--------------------------------------------------------------------------------
+Previously encountered problems must be checked:
+
+- Workspace was a stub instead of a real workspace.
+- Settings was only a capability badge.
+- Username was missing.
+- Navigation was flat.
+- Home page was not usable.
+- Popups appeared at wrong times.
+- activityPayload typing problem.
+- Executor build/test override problems.
+- GitHub server fallback error.
+- Uploads incorrectly wrote conversation_id.
+- Unsafe non-null assertions.
+- Missing user_id on insert.
+- Fake capability/execution risk.
+- GitHub OAuth credential exposure risk.
+- Work was written but not fully tested after credits ran out.
+
+Check the current codebase for these regressions.
+
+--------------------------------------------------------------------------------
+8.42 NO-FAKE RULE — GLOBAL
+--------------------------------------------------------------------------------
+This is non-negotiable.
+
+Never say:
+"I built it" unless it was actually built.
+
+Never say:
+"Tests passed" unless tests actually passed.
+
+Never say:
+"I fixed it" unless the relevant operation was re-run and verified.
+
+Never say:
+"File created" unless the file exists in the real project state.
+
+Never say:
+"Command ran" unless it actually ran.
+
+Never say:
+"Model available" unless the current provider reports it as available.
+
+Never say:
+"GitHub connected" unless OAuth/backend state confirms it.
+
+Never say:
+"Deployment complete" unless deployment state confirms it.
+
+--------------------------------------------------------------------------------
+8.43 UI PHILOSOPHY
+--------------------------------------------------------------------------------
+Antex should look like a serious development product rather than a mockup.
+
+Use the current gold-on-black visual language.
+
+Avoid excessive:
+- neon
+- glow
+- gradients
+- giant cards
+- decorative animation
+
+Gold should be an accent/identity, not an excuse to make every element bright.
+
+The UI should be:
+- clean
+- professional
+- dense enough for development
+- readable
+- responsive
+- consistent
+- restrained
+
+Reference products for quality/workflow inspiration included Replit, Cursor and
+Lovable, but do not clone their UI.
+
+--------------------------------------------------------------------------------
+8.44 LOGO DIRECTION
+--------------------------------------------------------------------------------
+The Antex logo is intentionally unrelated to the literal name.
+
+It should feel like a symbol that simply belongs to the brand.
+
+The approved direction was an abstract grid-like geometric mark with alternating
+gold cells/diagonal visual structure, rather than a literal A, terminal, code
+symbol, or word-derived icon.
+
+Do not redesign it into a literal Antex lettermark unless explicitly requested.
+
+--------------------------------------------------------------------------------
+8.45 REFERENCE DESIGN REPOSITORY
+--------------------------------------------------------------------------------
+The previously supplied visual reference repository was:
+cloud-page-publish by fawaazsalehmalik-collab.
+
+Use it only as a design-pattern reference.
+Do not blindly clone it.
+
+--------------------------------------------------------------------------------
+8.46 FIRST-USE POPUPS
+--------------------------------------------------------------------------------
+Popups should be rare and purposeful.
+
+Approved principle:
+- execution-dependent GitHub connection appears when actually needed
+- Android local-build warning appears when actually needed
+- unnecessary model-selection popup is removed under the Gemini architecture
+
+Do not interrupt the user repeatedly.
+
+--------------------------------------------------------------------------------
+8.47 SETTINGS
+--------------------------------------------------------------------------------
+Settings should be a real settings area, not a decorative page.
+
+Useful sections include:
+- Account
+- Display name
+- GitHub connection/status
+- Execution provider status
+- relevant runtime settings
+- secure AI/provider configuration status without exposing keys
+
+Do not display raw credentials.
+
+--------------------------------------------------------------------------------
+8.48 FRESH-START DATA RESET
+--------------------------------------------------------------------------------
+The earlier rebuild requested a clean account/project state.
+
+For any fresh-start migration, use a safe authenticated/admin operation and clear
+only the intended account's data.
+
+Potential categories:
+- profile
+- projects
+- project_files
+- conversations
+- messages
+- uploads
+- generated_images
+- replit_cloud_executor
+
+Never hard-code personal email addresses or user UUIDs into production code.
+
+--------------------------------------------------------------------------------
+8.49 TESTING MATRIX
+--------------------------------------------------------------------------------
+Test at minimum:
+
+AUTH
+- signup
+- signin
+- signout
+- profile creation
+- display name
+- isolation
+
+PROJECT
+- create
+- open
+- rename
+- continue
+- persistence
+
+WORKSPACE
+- actual workspace opens
+- files
+- editor
+- chat
+- activity
+- terminal
+- attachments
+
+AI
+- Gemini request
+- key 1
+- key 2
+- key 3
+- key 4
+- model fallback
+- quota exhaustion
+- 429
+- RESOURCE_EXHAUSTED
+- invalid key
+- invalid request
+- unavailable model
+- provider/network error
+- tool calls
+- code changes
+- debugging
+- lessons
+- verification
+
+EXECUTION
+- capability detection
+- command execution
+- stdout/stderr
+- exit code
+- process state
+- unavailable state
+
+GITHUB
+- OAuth
+- connection state
+- repo creation/selection
+- sync
+- Actions dispatch
+- status
+- logs
+- artifacts
+
+LOCAL
+- desktop execution
+- Android capability detection
+- Android warning
+- local build when supported
+- GitHub fallback when appropriate
+
+FILES
+- create
+- read
+- edit
+- rename
+- move
+- delete
+- upload
+- download
+
+SECURITY
+- keys hidden
+- tokens hidden
+- user isolation
+- no credentials in logs
+- no credentials in AI context
+- no credentials in Git
+
+RESPONSIVE
+- desktop
+- mobile
+- small screens
+
+--------------------------------------------------------------------------------
+8.50 FINAL REPLIT INSTRUCTION
+--------------------------------------------------------------------------------
+YOU ARE NOW BUILDING Antex.
+
+Actually build the product.
+
+Do not return a planning essay instead of implementation.
+
+Start by inspecting the current Replit project.
+
+Do not throw away useful working code.
+
+Remove obsolete Lovable AI Gateway inference and replace it with the approved
+Gemini provider system.
+
+Implement four secure Gemini key slots:
+GEMINI_API_KEY_1
+GEMINI_API_KEY_2
+GEMINI_API_KEY_3
+GEMINI_API_KEY_4
+
+Implement model fallback BEST → WORST, then key fallback 1 → 2 → 3 → 4 when
+quota exhaustion requires it.
+
+Keep Replit Cloud execution for web.
+
+Keep local desktop execution.
+
+Keep local Android execution where actually supported, with device-aware warnings
+and GitHub fallback where appropriate.
+
+Keep the real file manager, editor, terminal, build/test/debug system, image
+system, project system, Git, browser/research, database, secrets, deployment,
+and advanced tooling.
+
+Fix old regressions.
+
+Do not fake anything.
+
+Do not expose credentials.
+
+Do not claim success until the relevant operation is actually verified.
+
+When implementation is complete, run the available tests/builds and report the
+actual results.
+
+================================================================================
+END OF COMPLETE ANTEX MASTER PROMPT
+================================================================================
+
+--------------------------------------------------------------------------------
+CURRENT EXECUTION ARCHITECTURE — REPLIT CLOUD + LOCAL CPU
+--------------------------------------------------------------------------------
+Antex uses a platform-independent execution layer with two primary modes:
+
+1. Replit Cloud — Web / Cloud Execution
+   Web-based and remote development tasks run in the Replit Cloud Linux
+   environment. Commands, filesystem operations, dependency installation,
+   builds, tests, processes, logs, stdout, stderr, and exit codes must be real.
+   Never simulate execution or report an operation as completed when it was not.
+
+2. Install Locally — Use Local CPU
+   Antex can be installed locally on supported desktop and mobile platforms.
+   Where supported, development tasks run directly on the user's own CPU and
+   local filesystem/workspace. Commands, builds, tests, and processes are real
+   local operations; no cloud execution is required for tasks the local platform
+   can perform. The local runtime is integrated into Antex and does not require a
+   separate terminal application.
+
+3. Executor routing
+   WEB / CLOUD -> Replit Cloud Linux
+   DESKTOP -> Local CPU
+   ANDROID -> Local CPU where supported; Replit Cloud fallback where appropriate
+
+4. Common executor capabilities
+   execute, readFile, writeFile, listFiles, createDirectory, deletePath,
+   movePath, startProcess, stopProcess, getProcessOutput.
+
+5. Android local builds
+   Warn that demanding local builds can consume CPU, RAM, storage, battery, and
+   thermal capacity. Offer cloud execution for workloads better suited to it.
+
+6. The project filesystem remains the source of truth in both execution modes.
+
+
+File name: Implementation.txt
+Language: 
+Add a complete Image Generation, Image Viewing, and File Upload system to Antex.
+
+1. Image Generator
+
+Add native image generation capabilities to Antex.
+
+The agent should be able to generate images when the user requests things such as:
+
+- UI designs
+- logos
+- icons
+- concept art
+- textures
+- game assets
+- diagrams
+- illustrations
+- reference images
+- other visual assets needed by a project
+
+The image-generation system must use a real configured image-generation model/service.
+
+Do not create fake generated images or placeholder results.
+
+The agent should be able to:
+
+1. Understand the user's image request.
+2. Generate the image.
+3. Receive the actual generated image.
+4. Display it inside Antex.
+5. Save it to the current project when requested.
+6. Allow the user to download/use the generated asset.
+7. Allow the agent to reference the generated image in later project operations.
+
+---
+
+2. Image Viewer
+
+Create a proper image viewer inside Antex.
+
+Supported image files should include common formats such as:
+
+- PNG
+- JPG/JPEG
+- WEBP
+- GIF
+- SVG where safely supported
+
+The viewer should provide:
+
+- image preview
+- zoom
+- fit-to-screen
+- actual dimensions
+- file size
+- filename
+- format
+- project location
+- fullscreen viewing where appropriate
+
+For animated images such as GIFs, preserve animation when supported rather than displaying only a static frame.
+
+Do not modify the original file simply because it was opened in the viewer.
+
+---
+
+3. File Upload System
+
+Add a real file uploader to Antex.
+
+Users should be able to upload files into:
+
+- the current project
+- the current workspace
+- the chat/agent context when appropriate
+
+Support common project files including:
+
+- source code
+- images
+- documents
+- configuration files
+- archives
+- datasets
+- assets
+- other normal development files
+
+The uploader must use real backend/file storage infrastructure.
+
+Do not fake upload progress or successful uploads.
+
+Show real states such as:
+
+Uploading → Processing → Uploaded
+
+and real errors when an upload fails.
+
+---
+
+4. Drag & Drop
+
+Where supported, allow users to drag files directly into:
+
+- the chat
+- the project file manager
+- the editor
+- the image viewer
+
+Dropping an image into chat should allow the AI agent to actually receive and inspect that image if the selected model supports vision/image input.
+
+---
+
+5. Agent File Awareness
+
+Antex must understand uploaded/generated files as actual project assets.
+
+The agent should be able to:
+
+- inspect files
+- reference them
+- edit supported files
+- move them
+- rename them
+- delete them
+- copy them
+- use them in builds
+- include them in generated projects
+
+For images, the agent should be able to understand relevant visual information when the selected model supports image input.
+
+The agent must never claim to have viewed or analyzed an image that it did not actually receive.
+
+---
+
+6. Generated Image → Project Asset
+
+When Antex generates an image for a project, provide an option such as:
+
+Save to project
+
+Allow the user/agent to choose the destination path, for example:
+
+"/assets/logo.png"
+
+The resulting file must actually exist in the project's filesystem/storage.
+
+Generated assets should become available to the editor, file manager, preview system, and build system.
+
+---
+
+7. Chat Attachments
+
+Allow users to attach files directly to conversations.
+
+Show attachments as compact previews/cards.
+
+For images:
+
+- show a thumbnail
+- filename
+- dimensions when available
+- remove attachment option
+
+For other files:
+
+- show filename
+- file type
+- size
+- attachment status
+
+The AI should receive the actual attachment through the backend/model interface rather than merely receiving the filename.
+
+---
+
+8. Security & Limits
+
+Implement proper backend validation for uploads.
+
+Handle:
+
+- file size limits
+- supported MIME types
+- filename/path sanitization
+- malicious file handling
+- storage permissions
+- user/project isolation
+- authentication
+- access control
+
+Never expose private project files to another user.
+
+Do not expose backend storage credentials to the frontend.
+
+---
+
+9. Architecture
+
+Integrate this with the existing Antex architecture rather than creating a separate disconnected system.
+
+The flow should support:
+
+User → Antex UI → Backend → File/Image Service → Antex Agent → Project Files
+
+and:
+
+User → Image Request → Image Generation Service → Actual Image → Viewer → Project Storage
+
+Design the system so the image-generation provider can be replaced later without rewriting Antex's entire UI or project system.
+
+---
+
+10. Important
+
+Before implementing anything, inspect the existing Antex project architecture, authentication, database, storage, chat system, project filesystem, and model integration.
+
+Reuse existing infrastructure where possible.
+
+Do not create duplicate systems.
+
+Everything must be real:
+
+- real uploads
+- real storage
+- real image generation
+- real image viewing
+- real file references
+- real model/image input
+- real project assets
+
+No fake APIs, fake upload states, fake generated images, or placeholder implementations.
+After this:
+ANtex ALREADY HAS the core tools including:
+
+- Real terminal/shell execution
+- Image generation
+- Image viewer
+- File uploader
+- File manager
+- Code editor
+- Web research/browser access
+- Package/dependency management
+- Test runner
+- Debugging
+- Live preview
+- Database functionality
+- Secrets/environment management
+- Git/GitHub integration
+- Document/file parsing
+- Data/CSV analysis
+- UI/design capabilities
+- Media handling
+- Deployment capabilities
+- API/integration functionality
+- Browser automation
+- Screenshot capture
+- Project planning
+- Persistent project context/memory
+
+DO NOT blindly rebuild or duplicate any of these.
+
+Instead, inspect the current Antex implementation and determine which capabilities are already fully functional, partially implemented, mocked, or missing.
+
+Then add/finish the following advanced tooling where appropriate:
+
+1. PROJECT DIAGNOSTICS
+
+- Detect project type automatically.
+- Detect framework/language/package manager.
+- Detect build system.
+- Detect missing dependencies.
+- Detect configuration problems.
+- Detect incompatible versions.
+- Provide actionable diagnostics to the agent.
+
+2. CODE INTELLIGENCE
+
+- Project-wide symbol/search index.
+- Reference finding.
+- Definition finding.
+- Import/dependency graph.
+- Safe rename/refactor support.
+- Detect unused code/imports.
+- Detect obvious type/lint errors.
+- Understand relationships between files instead of treating files independently.
+
+3. VISUAL TESTING
+
+- Automatically capture screenshots of running applications.
+- Compare screenshots before/after changes.
+- Detect obvious visual regressions.
+- Allow the AI to inspect screenshots as part of the debugging loop.
+
+4. LOG/ERROR INTELLIGENCE
+
+- Centralized runtime/build/test logs.
+- Search and filter logs.
+- Correlate errors with commands, files, and processes.
+- Automatically identify the most relevant error instead of dumping huge logs into context.
+- Preserve useful historical failures for debugging.
+
+5. PROCESS MANAGEMENT
+
+- Start multiple processes.
+- Track PID/process identity.
+- Monitor running processes.
+- Capture stdout/stderr independently.
+- Stop/restart processes.
+- Detect crashed processes.
+- Detect port conflicts.
+- Automatically clean up processes when a project/session ends.
+
+6. PORT MANAGEMENT
+
+- Detect available ports.
+- Reserve project ports.
+- Detect which process owns a port.
+- Automatically resolve common port conflicts.
+- Expose running services safely through the preview system.
+
+7. ARTIFACT MANAGEMENT
+
+- Track generated files such as APKs, JARs, ZIPs, binaries, builds, reports, screenshots, and test results.
+- Allow the agent to reference artifacts directly.
+- Provide download/view actions.
+- Keep artifacts separate from source files where appropriate.
+
+8. BACKGROUND JOBS
+
+- Allow long-running builds/tests/tasks to continue while the user navigates the UI.
+- Show real job status.
+- Allow cancellation.
+- Preserve logs/results.
+- Never display fake progress.
+
+9. DIFF/CHANGE REVIEW
+
+- Show exactly what the agent changed.
+- File-level and line-level diffs.
+- Allow reverting individual changes where possible.
+- Keep a clear history of agent modifications.
+- Let the agent inspect its own changes before testing.
+
+10. CHECKPOINTS / SNAPSHOTS
+
+- Create project checkpoints before major agent operations.
+- Restore a previous checkpoint if an agent change breaks the project.
+- Make this work with the existing Git/version-control architecture where possible.
+
+11. SECURITY AUDITOR
+
+- Detect accidentally exposed secrets.
+- Detect dangerous configuration mistakes.
+- Detect suspicious dependency changes.
+- Detect insecure API endpoints.
+- Warn before high-impact operations.
+- Never expose credentials to the model, frontend, logs, or user-visible output.
+
+12. ENVIRONMENT DETECTION
+
+- Detect available runtimes and tools.
+- Detect Java, Node, Python, Rust, Go, Gradle, Maven, Git, etc.
+- Detect versions.
+- Tell the agent what is actually available.
+- Never assume a runtime/tool exists when it does not.
+
+13. RESOURCE MONITORING
+
+- Monitor CPU, memory, disk usage, process usage, and execution limits where the backend exposes them.
+- Warn about resource exhaustion.
+- Help the agent diagnose builds that fail because of resource limits.
+
+14. SMART COMMAND PLANNING
+    Before executing commands, the agent should understand:
+
+- What the command does.
+- Why it is needed.
+- Which project it affects.
+- Expected output.
+- Potential failure conditions.
+
+For destructive/high-impact operations, require appropriate confirmation or safety checks.
+
+15. MULTI-STEP AGENT OPERATIONS
+    Support reliable chains such as:
+
+PLAN
+→ inspect project
+→ modify files
+→ install dependencies
+→ run build
+→ inspect output
+→ diagnose failure
+→ modify files
+→ rebuild
+→ run tests
+→ launch preview
+→ inspect result
+→ verify
+→ report
+
+The agent must be able to recover from intermediate failures instead of stopping at the first error.
+
+16. TOOL ORCHESTRATION
+    Create a unified internal tool layer so the AI does not need to know implementation-specific details.
+
+Use abstractions such as:
+
+execute()
+readFile()
+writeFile()
+listFiles()
+searchFiles()
+startProcess()
+stopProcess()
+getProcessStatus()
+getLogs()
+installDependency()
+runTests()
+buildProject()
+captureScreenshot()
+generateImage()
+inspectImage()
+openPreview()
+gitOperation()
+deploy()
+queryDatabase()
+
+The underlying implementation can change without requiring changes to the AI agent.
+
+17. CAPABILITY DISCOVERY
+    At the beginning of an agent task, determine which tools are actually available in the current environment.
+
+The agent must distinguish between:
+
+AVAILABLE
+UNAVAILABLE
+TEMPORARILY FAILED
+NOT SUPPORTED
+
+Never fake a capability.
+
+18. TOOL FAILURE RECOVERY
+    If a tool fails:
+
+- Capture the real error.
+- Determine whether the failure is transient, configuration-related, permission-related, resource-related, or an actual code failure.
+- Attempt an appropriate recovery when safe.
+- Retry when appropriate.
+- Tell the user what actually happened if recovery fails.
+
+19. TOOL PERMISSIONS
+    Implement a consistent permission model for tools.
+
+Examples:
+
+- Read-only tools
+- Project modification tools
+- External network tools
+- Deployment tools
+- Destructive filesystem operations
+- Credential/secret operations
+
+The model should only receive the minimum permissions necessary for the task.
+
+20. UNIFIED ACTIVITY TIMELINE
+    Create a real project activity timeline showing actions such as:
+
+Analyzing project
+Reading files
+Planning
+Editing files
+Installing dependency
+Running command
+Building
+Testing
+Debugging
+Starting process
+Opening preview
+Taking screenshot
+Fixing issue
+Verifying
+Completed
+
+Every activity must correspond to a real operation.
+
+IMPORTANT IMPLEMENTATION RULES:
+
+- Inspect the existing Antex codebase FIRST.
+- Do not rebuild functionality that already works.
+- Do not create duplicate tools.
+- Reuse existing components, APIs, database structures, and backend services whenever possible.
+- Replace mocks/placeholders with real functionality where they exist.
+- Keep the architecture modular so execution providers can be swapped later.
+- Maintain compatibility with the existing GitHub-based beta execution system.
+- Keep the current Antex UI/design language.
+- Do not add unnecessary visual clutter.
+- Do not expose API keys, OAuth tokens, secrets, or internal credentials.
+- Do not fake terminal output, files, builds, tests, processes, model responses, or tool results.
+
+After implementation, test each newly added capability end-to-end and report:
+
+1. What already existed.
+2. What was missing.
+3. What was implemented.
+4. What was fixed.
+5. What could not be implemented and why.
+6. What was actually tested successfully.
+7. Any remaining limitations.
+
+The final result should make Antex's tools feel like ONE coherent agent system rather than a collection of disconnected features.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
